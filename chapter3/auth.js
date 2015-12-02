@@ -1,5 +1,8 @@
 // TODO: make setupAuth depend on the Config service...
-function setupAuth(User, app) {
+var wagner = require('wagner-core');
+require('./dependencies')(wagner);
+
+function setupAuth(User, app, Config) {
   var passport = require('passport');
   var FacebookStrategy = require('passport-facebook').Strategy;
 
@@ -14,12 +17,22 @@ function setupAuth(User, app) {
       exec(done);
   });
 
+  // setup keys
+  var facebookClientId = wagner.invoke(function(Config) {
+    return Config.facebookClientId;
+  });
+  var facebookClientSecret = wagner.invoke(function(Config) {
+    return Config.facebookClientSecret;
+  });
+
   // Facebook-specific
   passport.use(new FacebookStrategy(
     {
       // TODO: and use the Config service here
-      clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      // clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientID: facebookClientId,
+      // clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      clientSecret: facebookClientSecret,
       callbackURL: 'http://localhost:3000/auth/facebook/callback',
       // Necessary for new version of Facebook graph API
       profileFields: ['id', 'emails', 'name']
