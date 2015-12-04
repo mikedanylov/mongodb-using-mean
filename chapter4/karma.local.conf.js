@@ -10,7 +10,7 @@ module.exports = function(config) {
       { pattern: './templates/*.html', included: false, served: true }
     ],
     frameworks: ['mocha', 'chai'],
-    browsers: ['Chrome'],
+    browsers: ['Firefox'],
     port: 9876,
     proxies : {
       '/assessment': 'http://localhost:9876/base/'
